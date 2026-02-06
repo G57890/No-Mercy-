@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>عداد أونو لا ترحم</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; background: #1a1a1a; color: white; }
+        .setup, .game { margin-top: 20px; }
+        .player-card { border: 2px solid #f39c12; padding: 15px; margin: 10px; display: inline-block; border-radius: 10px; width: 150px; }
+        .out { background: #c0392b; border-color: #ff0000; animation: shake 0.5s; }
+        input { padding: 5px; width: 80%; margin: 5px; text-align: center; }
+        button { padding: 8px 15px; cursor: pointer; background: #27ae60; color: white; border: none; border-radius: 5px; }
+        @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(5px); } 50% { transform: translateX(-5px); } 100% { transform: translateX(0); } }
+    </style>
+</head>
+<body>
+
+    <h2>مرصد أونو لا ترحم 🃏</h2>
+
+    <div id="setup" class="setup">
+        <p>كم عدد اللاعبين؟ (2-6)</p>
+        <input type="number" id="playerCount" min="2" max="6" value="2">
+        <button onclick="startSetup()">ابدأ</button>
+    </div>
+
+    <div id="namesInput" class="setup" style="display:none;">
+        <div id="nameFields"></div>
+        <button onclick="startGame()">دخول اللعبة</button>
+    </div>
+
+    <div id="gameArea" class="game" style="display:none;">
+        <div id="playersList"></div>
+    </div>
+
+    <script>
+        function startSetup() {
+            const count = document.getElementById('playerCount').value;
+            let html = '';
+            for(let i=1; i<=count; i++) {
+                html += `<input type="text" id="name${i}" placeholder="اسم اللاعب ${i}"> <br>`;
+            }
+            document.getElementById('nameFields').innerHTML = html;
+            document.getElementById('setup').style.display = 'none';
+            document.getElementById('namesInput').style.display = 'block';
+        }
+
+        function startGame() {
+            const count = document.getElementById('playerCount').value;
+            let html = '';
+            for(let i=1; i<=count; i++) {
+                const name = document.getElementById(`name${i}`).value || `لاعب ${i}`;
+                html += `
+                    <div class="player-card" id="card${i}">
+                        <h3>${name}</h3>
+                        <input type="number" id="count${i}" value="7" oninput="checkMercy(${i})">
+                        <p id="msg${i}"></p>
+                    </div>
+                `;
+            }
+            document.getElementById('playersList').innerHTML = html;
+            document.getElementById('namesInput').style.display = 'none';
+            document.getElementById('gameArea').style.display = 'block';
+        }
+
+        function checkMercy(id) {
+            const val = document.getElementById(`count${id}`).value;
+            const card = document.getElementById(`card${id}`);
+            const msg = document.getElementById(`msg${id}`);
+            
+            if (val >= 25) {
+                card.classList.add('out');
+                msg.innerText = "❌ اطللللع براااا!";
+            } else {
+                card.classList.remove('out');
+                msg.innerText = "";
+            }
+        }
+    </script>
+</body>
+</html>
